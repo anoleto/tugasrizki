@@ -29,7 +29,7 @@ def index():
 @app.route('/page/<int:id>')
 def page(id):
     conn = sqlite3.connect('articles.db')
-    cursor = conn.execute(f"select title, content, image from articles where id={id}")
+    cursor = conn.execute(f"select title, content, image from articles where id=?", (id,))
     article = cursor.fetchone()
     conn.close()
 
@@ -46,7 +46,7 @@ def create():
         title = request.form['title']
         content = request.form['content']
         conn = sqlite3.connect('articles.db')
-        conn.execute(f"insert into articles (title, content) values ({title}, {content})")
+        conn.execute("insert into articles (title, content) values (?, ?)", (title, content))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
